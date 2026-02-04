@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6">
+
+  <h2 class="text-2xl font-semibold mb-4">📁 Categories</h2>
+
+  <!-- Add Category -->
+  <form method="post" class="flex gap-3 mb-6">
+    <input type="text" name="name"
+           placeholder="New Category Name"
+           class="flex-1 border px-3 py-2 rounded-lg"
+           required>
+    <button class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg">
+      Add
+    </button>
+  </form>
+
+  <!-- List of Categories -->
+  <div class="space-y-4">
+    {% for c in categories %}
+      <div class="p-4 border rounded-lg bg-gray-50 hover:bg-gray-100 transition">
+
+        <div class="flex justify-between items-center">
+
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800">
+              {{ c.name }}
+            </h3>
+            <p class="text-gray-500 text-sm">Category ID: #{{ c.id }}</p>
+          </div>
+
+          <!-- Category Stats -->
+          <div class="text-right">
+            <p class="text-sm text-gray-700">
+              <span class="font-semibold">Total Products:</span>
+              {{ c.total_products or 0 }}
+            </p>
+
+            <p class="text-sm text-gray-700">
+              <span class="font-semibold">Total Quantity:</span>
+              {{ c.total_quantity or 0 }}
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    {% else %}
+      <p class="text-gray-500 text-center">No categories yet.</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+{% endblock %}

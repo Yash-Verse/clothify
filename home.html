@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex items-center justify-between mb-6">
+    <h2 class="text-3xl font-bold text-gray-800">🛍️ Products Available</h2>
+
+    <form method="GET" action="/" class="flex items-center space-x-2">
+        <input 
+            type="text"
+            name="q"
+            value="{{ q }}"
+            placeholder="Search products..."
+            class="px-4 py-2 border rounded-lg w-64 focus:ring-2 focus:ring-blue-500 outline-none"
+        >
+        <button 
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            Search
+        </button>
+    </form>
+</div>
+
+<!-- Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+    {% for p in products %}
+    <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition">
+
+        <!-- Product Image -->
+        <img 
+            src="{{ p.image_url if p.image_url else '/static/images/default_product.jpg' }}"
+            class="w-full h-48 object-cover"
+            alt="{{ p.name }}"
+        >
+
+        <div class="p-4">
+            <h3 class="text-xl font-semibold text-gray-900">{{ p.name }}</h3>
+
+            <!-- Price & Category -->
+            <p class="text-lg text-green-600 font-semibold">₹{{ p.price }}</p>
+            <p class="text-sm text-gray-500">
+                {{ p.category if p.category else 'No Category' }}
+            </p>
+
+            <!-- Brand & Colour -->
+            <p class="text-sm text-gray-600">
+                <span class="font-semibold">Brand:</span> {{ p.brand or 'N/A' }}
+            </p>
+            <p class="text-sm text-gray-600">
+                <span class="font-semibold">Colour:</span> {{ p.colour or 'N/A' }}
+            </p>
+
+            <!-- Buttons -->
+            <div class="mt-4 flex justify-between">
+
+                <!-- Add to Bill (AJAX) -->
+                <button 
+                    onclick="addToBill({{ p.id }})"
+                    class="bg-blue-800 text-white px-4 py-2 w-full rounded-lg text-sm hover:bg-blue-900 transition font-semibold">
+                    Add to Bill
+                </button>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+<!-- Success Toast Popup -->
+<div id="toast"
+    class="hidden fixed bottom-6 right-6 bg-green-600 text-white px-5 py-3 rounded-lg shadow-lg text-sm">
+    Added to bill ✔
+</div>
+
+<script>
+function addToBill(pid) {
+    fetch(`/bill/add/${pid}`)
+        .then(res => {
+            showToast();
+        })
+        .catch(err => console.error(err));
+}
+
+// Show success toast for 1.5 seconds
+function showToast() {
+    const t = document.getElementById("toast");
+    t.classList.remove("hidden");
+
+    setTimeout(() => {
+        t.classList.add("hidden");
+    }, 1500);
+}
+</script>
+
+{% endblock %}

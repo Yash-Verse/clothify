@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-5xl mx-auto">
+  <!-- Title Section -->
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-4xl font-bold text-gray-800 flex items-center gap-2">🧾 Billing System</h2>
+    <a href="{{ url_for('home') }}" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium px-4 py-2 rounded-lg shadow">➕ Add More Items</a>
+  </div>
+
+  <!-- Bill Table Card -->
+  <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
+    <div class="bg-gradient-to-r from-yellow-400 to-yellow-300 p-4">
+      <h3 class="text-lg font-semibold text-gray-900">🛍 Current Bill Details</h3>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left text-gray-700">
+        <thead class="bg-gray-100 uppercase text-gray-600 border-b">
+          <tr>
+            <th class="py-3 px-4">Product</th>
+            <th class="py-3 px-4">Quantity</th>
+            <th class="py-3 px-4">Price (₹)</th>
+            <th class="py-3 px-4">Total (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if bill_items %}
+            {% for b in bill_items %}
+              <tr class="border-b hover:bg-gray-50 transition">
+                <td class="py-3 px-4 font-medium">{{ b.name }}</td>
+                <td class="py-3 px-4">{{ b.qty }}</td>
+                <td class="py-3 px-4 text-gray-800">{{ b.unit_price }}</td>
+                <td class="py-3 px-4 text-green-600 font-semibold">{{ b.subtotal }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="4" class="p-6 text-center text-gray-500">No items in the cart. Add products from the Home or Inventory page.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Total & Actions -->
+    <div class="flex flex-col sm:flex-row justify-between items-center px-6 py-6 bg-gray-50">
+      <div class="text-lg font-semibold text-gray-800 mb-4 sm:mb-0">
+        Total Amount: <span class="text-green-600">₹{{ total_amount }}</span>
+      </div>
+
+      <div class="space-x-3">
+        <button id="generateBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium transition">🧾 Generate Bill</button>
+        <button id="confirmBtn" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg font-medium transition">✅ Confirm & Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative Section -->
+  <div class="mt-10 flex justify-center">
+    <img src="/static/images/billing_banner.png" class="w-full rounded-lg shadow mb-4" />
+
+  </div>
+</section>
+
+<script>
+  document.getElementById('generateBtn').addEventListener('click', async () => {
+    alert('Generate bill (preview) — not implemented: will open a preview or download in future.');
+  });
+
+  document.getElementById('confirmBtn').addEventListener('click', async () => {
+    const items = {{ bill_items|tojson }};
+    if (!items || items.length === 0) {
+      alert('Cart empty.');
+      return;
+    }
+    const res = await fetch('/bill/save', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({items})
+    });
+    const j = await res.json();
+    if (j.success) {
+      alert('Bill saved: ' + j.bill_id);
+      window.location.href = '/';
+    } else {
+      alert('Failed to save bill.');
+    }
+  });
+</script>
+{% endblock %}

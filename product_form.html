@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto pt-6">
+
+  <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+    <div class="bg-gradient-to-r from-yellow-400 to-yellow-300 p-6">
+      <h2 class="text-3xl font-semibold text-gray-900">
+        {% if product %}Edit Product{% else %}Add Product{% endif %}
+      </h2>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- LEFT COLUMN - IMAGE PREVIEW + UPLOAD -->
+      <div class="md:col-span-1 space-y-4">
+
+        <!-- Preview -->
+        <div>
+          <label class="text-sm font-semibold text-gray-600">Image Preview</label>
+          <div class="w-full h-56 bg-gray-100 border border-dashed rounded-lg flex items-center justify-center overflow-hidden">
+            <img id="imgPreview"
+                 src="{{ product.image_url if product and product.image_url else url_for('static', filename='images/default_product.jpg') }}"
+                 class="object-cover w-full h-full">
+          </div>
+        </div>
+
+        <!-- Image URL -->
+        <div>
+          <label class="text-sm font-semibold text-gray-600">Image URL (Online)</label>
+          <input type="text" name="image_url" id="image_url"
+                 value="{{ product.image_url if product else '' }}"
+                 class="border w-full px-3 py-2 rounded-lg">
+        </div>
+
+        <!-- File Upload -->
+        <div>
+          <label class="text-sm font-semibold text-gray-600">Upload Image (from PC)</label>
+          <input type="file" name="image_file" id="image_file"
+                 accept="image/*"
+                 class="border w-full px-3 py-2 rounded-lg bg-white">
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN - PRODUCT DETAILS -->
+      <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div>
+          <label class="text-sm font-semibold">Name</label>
+          <input name="name" required
+                 value="{{ product.name if product else '' }}"
+                 class="border w-full px-3 py-2 rounded-lg">
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Brand</label>
+          <input name="brand"
+                 value="{{ product.brand if product else '' }}"
+                 class="border w-full px-3 py-2 rounded-lg">
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Price (₹)</label>
+          <input name="price" type="number" step="0.01" required
+                 value="{{ product.price if product else '' }}"
+                 class="border w-full px-3 py-2 rounded-lg">
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Quantity</label>
+          <input name="quantity" type="number" required
+                 value="{{ product.quantity if product else 0 }}"
+                 class="border w-full px-3 py-2 rounded-lg">
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Colour</label>
+          <input name="colour"
+                 value="{{ product.colour if product else '' }}"
+                 class="border w-full px-3 py-2 rounded-lg">
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Category</label>
+          <select name="category_id" class="border w-full px-3 py-2 rounded-lg">
+            <option value="">-- Select Category --</option>
+            {% for c in categories %}
+            <option value="{{c.id}}"
+              {% if product and product.category_id == c.id %}selected{% endif %}>
+              {{c.name}}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Supplier</label>
+          <select name="supplier_id" class="border w-full px-3 py-2 rounded-lg">
+            <option value="">-- Select Supplier --</option>
+            {% for s in suppliers %}
+            <option value="{{s.id}}"
+              {% if product and product.supplier_id == s.id %}selected{% endif %}>
+              {{s.name}}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="text-sm font-semibold">Description</label>
+          <textarea name="description" class="border w-full px-3 py-2 rounded-lg" rows="4">
+            {{ product.description if product else '' }}
+          </textarea>
+        </div>
+
+        <div class="md:col-span-2 flex justify-end gap-4 mt-3">
+          <a href="{{ url_for('inventory') }}" class="px-4 py-2 border rounded-lg">Cancel</a>
+          <button type="submit" class="px-5 py-2 bg-yellow-400 rounded-lg font-semibold shadow">
+            {% if product %}Update Product{% else %}Save Product{% endif %}
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Preview Script -->
+<script>
+const imgPreview = document.getElementById("imgPreview");
+const imageUrlInput = document.getElementById("image_url");
+const imageFileInput = document.getElementById("image_file");
+
+// Preview from URL
+imageUrlInput.addEventListener("input", () => {
+  imgPreview.src = imageUrlInput.value;
+});
+
+// Preview from file
+imageFileInput.addEventListener("change", () => {
+  const file = imageFileInput.files[0];
+  if (file) {
+    let reader = new FileReader();
+    reader.onload = e => imgPreview.src = e.target.result;
+    reader.readAsDataURL(file);
+  }
+});
+</script>
+
+{% endblock %}

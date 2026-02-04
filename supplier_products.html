@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6">🧾 Products Supplied by {{ supplier.name }}</h2>
+
+<a href="{{ url_for('suppliers_page') }}"
+   class="text-blue-600 underline mb-4 inline-block">← Back to Suppliers</a>
+
+{% if products|length == 0 %}
+    <p class="text-gray-500 text-lg">No products linked to this supplier.</p>
+{% else %}
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+    {% for p in products %}
+    <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition">
+
+        <img src="{{ p.image_url or '/static/images/default_product.jpg' }}"
+             class="w-full h-48 object-cover">
+
+        <div class="p-4">
+            <h3 class="text-xl font-semibold">{{ p.name }}</h3>
+            <p class="text-green-600 font-semibold">₹{{ p.price }}</p>
+            <p class="text-sm text-gray-500">{{ p.category or 'No Category' }}</p>
+            <p class="text-sm text-gray-500">Brand: {{ p.brand or 'N/A' }}</p>
+            <p class="text-sm text-gray-500">Colour: {{ p.colour or 'N/A' }}</p>
+
+            <div class="mt-4 flex justify-between">
+                <a href="{{ url_for('bill_add', pid=p.id) }}"
+                   class="bg-blue-700 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-900">
+                    Add to Bill
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+{% endblock %}

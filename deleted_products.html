@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6 flex items-center gap-2">
+    🗑 Deleted Products Log
+</h2>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <table class="min-w-full text-left">
+        <thead class="bg-red-100 text-gray-800 font-semibold">
+            <tr>
+                <th class="px-4 py-3">Product ID</th>
+                <th class="px-4 py-3">Name</th>
+                <th class="px-4 py-3">Category</th>
+                <th class="px-4 py-3">Brand</th>
+                <th class="px-4 py-3">Colour</th>
+                <th class="px-4 py-3">Price</th>
+                <th class="px-4 py-3">Quantity</th>
+                <th class="px-4 py-3">Deleted On</th>
+                <th class="px-4 py-3 text-center">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for d in deleted %}
+            <tr class="border-b hover:bg-gray-50 transition">
+
+                <td class="px-4 py-3">{{ d.product_id }}</td>
+
+                <td class="px-4 py-3 font-semibold">{{ d.name }}</td>
+
+                <td class="px-4 py-3">{{ d.category_name or '-' }}</td>
+
+                <td class="px-4 py-3">{{ d.brand or '-' }}</td>
+
+                <td class="px-4 py-3">{{ d.colour or '-' }}</td>
+
+                <td class="px-4 py-3">₹{{ d.price }}</td>
+
+                <td class="px-4 py-3">{{ d.quantity }}</td>
+
+                <td class="px-4 py-3">
+                    {{ d.deleted_on }}
+                </td>
+
+                <td class="px-4 py-3 text-center">
+                    <form action="/product/restore/{{ d.product_id }}" method="POST">
+                        <button class="bg-green-600 text-white px-4 py-1 rounded-lg hover:bg-green-700">
+                            Restore
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

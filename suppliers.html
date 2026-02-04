@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6">📦 Suppliers</h2>
+
+<div class="flex justify-end mb-4">
+    <a href="{{ url_for('supplier_add') }}"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+        ➕ Add Supplier
+    </a>
+</div>
+
+<table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="px-4 py-3 text-left">Name</th>
+            <th class="px-4 py-3 text-left">Contact</th>
+            <th class="px-4 py-3 text-left">Address</th>
+            <th class="px-4 py-3 text-left">Date Added</th>
+            <th class="px-4 py-3 text-center">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for s in suppliers %}
+        <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-3">{{ s.name }}</td>
+            <td class="px-4 py-3">{{ s.contact }}</td>
+            <td class="px-4 py-3">{{ s.address }}</td>
+            <td class="px-4 py-3">{{ s.date_added }}</td>
+
+            <td class="px-4 py-3 text-center">
+
+                <a href="{{ url_for('supplier_products', sid=s.id) }}"
+                   class="text-indigo-600 font-semibold hover:underline mr-3">
+                    View Products
+                </a>
+
+                <a href="{{ url_for('supplier_edit', id=s.id) }}"
+                   class="text-blue-600 font-semibold hover:underline mr-3">
+                    Edit
+                </a>
+
+                <form action="{{ url_for('supplier_delete', id=s.id) }}"
+                      method="POST" class="inline">
+                    <button class="text-red-600 font-semibold hover:underline"
+                            onclick="return confirm('Delete this supplier?')">
+                        Delete
+                    </button>
+                </form>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

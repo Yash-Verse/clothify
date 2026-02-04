@@ -1,0 +1,4 @@
+Flask==2.2.5
+pyodbc==4.0.34
+pywebview==3.8
+Werkzeug==2.2.3

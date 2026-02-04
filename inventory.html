@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex items-center justify-between mb-4">
+  <h2 class="text-2xl font-semibold">Inventory</h2>
+  {% if session_user %}
+  <a href="{{ url_for('add_product') }}" class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg shadow">
+    ➕ Add Product
+  </a>
+  {% endif %}
+</div>
+
+<div class="bg-white rounded-xl shadow overflow-x-auto">
+  <table class="min-w-full text-left">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-3">Product</th>
+        <th class="px-4 py-3">Category</th>
+        <th class="px-4 py-3">Qty</th>
+        <th class="px-4 py-3">Price</th>
+        <th class="px-4 py-3">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for p in products %}
+      {% if p.is_deleted == 0 %}
+      <tr class="border-b">
+        <td class="px-4 py-3">{{ p.name }}</td>
+        <td class="px-4 py-3">{{ p.category or '-' }}</td>
+        <td class="px-4 py-3">{{ p.quantity }}</td>
+        <td class="px-4 py-3">₹{{ p.price }}</td>
+
+        <td class="px-4 py-3">
+          <a href="{{ url_for('edit_product', pid=p.id) }}" class="text-blue-600 mr-3">Edit</a>
+
+          <form action="{{ url_for('delete_product', pid=p.id) }}" 
+                method="post" style="display:inline;" 
+                onsubmit="return confirm('Soft delete this product?')">
+
+            <button class="text-red-600">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+
+  </table>
+</div>
+
+{% endblock %}

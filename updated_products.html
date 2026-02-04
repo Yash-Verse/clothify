@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6 flex items-center gap-2">
+    🔄 Updated Products Log
+</h2>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <table class="min-w-full text-left">
+        <thead class="bg-blue-100 text-gray-700 font-semibold">
+            <tr>
+                <th class="px-4 py-3">Product ID</th>
+                <th class="px-4 py-3">Field</th>
+                <th class="px-4 py-3">Old Value</th>
+                <th class="px-4 py-3">New Value</th>
+                <th class="px-4 py-3">Updated On</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for row in logs %}
+            <tr class="border-b hover:bg-gray-50 transition">
+                <td class="px-4 py-3">{{ row.product_id }}</td>
+                <td class="px-4 py-3 capitalize">
+                    {{ row.field_name }}
+                </td>
+                <td class="px-4 py-3">
+                    {{ row.old_value if row.old_value else '-' }}
+                </td>
+                <td class="px-4 py-3">
+                    {{ row.new_value if row.new_value else '-' }}
+                </td>
+                <td class="px-4 py-3">
+                    {{ row.updated_on }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

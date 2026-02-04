@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6">
+    {{ 'Edit Supplier' if supplier else 'Add Supplier' }}
+</h2>
+
+<form method="POST" class="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl">
+
+    <label class="block mb-2 font-semibold">Supplier Name</label>
+    <input type="text" name="name"
+           value="{{ supplier.name if supplier else '' }}"
+           required
+           class="w-full border px-4 py-2 rounded mb-4">
+
+    <label class="block mb-2 font-semibold">Contact</label>
+    <input type="text" name="contact"
+           value="{{ supplier.contact if supplier else '' }}"
+           class="w-full border px-4 py-2 rounded mb-4">
+
+    <label class="block mb-2 font-semibold">Address</label>
+    <textarea name="address"
+              class="w-full border px-4 py-2 rounded mb-4">{{ supplier.address if supplier else '' }}</textarea>
+
+    <button class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">
+        Save
+    </button>
+
+    <a href="{{ url_for('suppliers_page') }}"
+       class="ml-4 text-gray-700 hover:underline">Cancel</a>
+
+</form>
+
+{% endblock %}
